@@ -6,7 +6,9 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.nio.MappedByteBuffer;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,9 +22,10 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String orderTrackingNumber;
     int totalQuantity;
     double totalPrice;
+     String orderTrackingNumber;
+
     @CreationTimestamp
     LocalDate createdDate;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "order")
@@ -30,7 +33,9 @@ public class Order {
     @OneToMany
     Set<Product> products;
 
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public void add(OrderItem item) {
 
@@ -42,6 +47,9 @@ public class Order {
             orderItems.add(item);
             item.setOrder(this);
         }
+    }
+    public void setOrderTrackingNumber(String orderTrackingNumber) {
+        this.orderTrackingNumber = orderTrackingNumber;
     }
 
 }

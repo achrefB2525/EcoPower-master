@@ -12,4 +12,5 @@ public interface IProductService {
     Product getById(long id);
     void remove(long id);
     List<Product> getAllProductsByCategory(ProductCategory category);
+    Product findProdById (Long id);
 }
