@@ -44,6 +44,8 @@ public class SecrityConfig   {
                 hasAnyAuthority(Role.Admin.name()
                         , Role.User.name())
                 .antMatchers("/auth/authenticate").permitAll()
+                .antMatchers("/checkout/**").hasAnyAuthority(Role.Provider.name() ,Role.User.name())
+
                 .anyRequest()
                 .authenticated()
                 .and()

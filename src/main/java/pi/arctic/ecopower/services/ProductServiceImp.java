@@ -43,4 +43,9 @@ public class ProductServiceImp implements IProductService{
     public List<Product> getAllProductsByCategory(ProductCategory category) {
         return productRepo.findByProductCategory(category);
     }
+    @Override
+    public Product findProdById(Long id) {
+        return productRepo.findById(id).orElse(null);
+    }
+
 }

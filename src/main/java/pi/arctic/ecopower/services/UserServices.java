@@ -82,4 +82,6 @@ public class UserServices implements IUserservice {
         userEmail = IjwtService.extractUserEmail(jwt);
 
         return userRepo.findByEmail(userEmail).get();
-    }}
+    }
+    
+}

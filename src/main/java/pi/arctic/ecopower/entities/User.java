@@ -6,8 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -40,6 +39,7 @@ public class User implements UserDetails {
     public boolean enabled =true;
 
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -64,7 +64,18 @@ public String getPassword(){
     }
 
     @Override
+
     public boolean isCredentialsNonExpired() {
         return true;
     }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private static Set<Order> orders = new HashSet<>();
+
+    public void addOrder(Order order) {
+        if (order != null) {
+            orders.add(order);
+            order.setUser(this);
+        }
+    }
 }
+
