@@ -71,11 +71,6 @@ public String getPassword(){
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private static Set<Order> orders = new HashSet<>();
 
-    public void addOrder(Order order) {
-        if (order != null) {
-            orders.add(order);
-            order.setUser(this);
-        }
-    }
+
 }
 

@@ -22,6 +22,7 @@ public class Product {
     String description;
     Double price;
     int quantity;
+
     @ManyToOne
     ProductCategory productCategory;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productimage")

@@ -20,12 +20,14 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+   // @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     int totalQuantity;
     double totalPrice;
      String orderTrackingNumber;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "addressLivraison", referencedColumnName = "id")
+    public Address addressLivraison;
     @CreationTimestamp
     LocalDate createdDate;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "order")

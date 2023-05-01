@@ -24,7 +24,7 @@ public class Checkoutcontroller {
     @Autowired
     CheckoutserviceImp checkoutservice ;
     @PostMapping("/achat")
-    //passer uen commande et la triater
+    //passer une commande et la triater
  public Reponseachat placeorder(@NotNull HttpServletRequest Request , @RequestBody Achat achat ) throws Exception {
         Reponseachat repenseachat = checkoutservice.placeOrder(Request,achat);
         return repenseachat;
