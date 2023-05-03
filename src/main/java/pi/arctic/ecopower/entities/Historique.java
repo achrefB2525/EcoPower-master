@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.text.DateFormat;
 
 @Data
 @Builder
@@ -18,7 +19,7 @@ public class Historique {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  int id ;
-
+     DateFormat DateAchat ;
     public void setOrderId(Long id) {
     }
 

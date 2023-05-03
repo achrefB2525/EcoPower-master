@@ -34,6 +34,7 @@ public class SecrityConfig   {
                 .authorizeHttpRequests()
                 .antMatchers("/auth/register").permitAll()
                 .antMatchers("/logout").permitAll()
+                .antMatchers("**").permitAll()
                 .antMatchers("/login/oauth2/google").permitAll()
                 .antMatchers("/user/add-user").hasAuthority(Role.Admin.name())
                 .antMatchers("/user/getUsers").hasAuthority(Role.Admin.name())
