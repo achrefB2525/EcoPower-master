@@ -19,13 +19,10 @@ public class Address {
 
     @Column(name="city")
     private String city;
-
-    @Column(name="House")
-    private String House;
     @Column(name="zip_code")
     private String zipCode;
 
     @OneToOne
     @PrimaryKeyJoinColumn
-    private Order order;
+    private Orders orders;
 }

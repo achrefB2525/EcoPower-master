@@ -5,9 +5,9 @@ import org.apache.catalina.User;
 
 @Data
 public class Payment {
-    private User user;
+   // private User user;
     private int amount;
     private String currency;
-    private String Emailrecu;
+
 
 }

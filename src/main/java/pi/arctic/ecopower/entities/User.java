@@ -1,14 +1,21 @@
 package pi.arctic.ecopower.entities;
 
+
 import lombok.*;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import static javax.persistence.EnumType.STRING;
+
+
 
 @Data
 @Builder
@@ -22,7 +29,7 @@ import static javax.persistence.EnumType.STRING;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private  int id ;
+    private  int id ;
     private int cin;
 
     private String username;
@@ -49,10 +56,10 @@ public class User implements UserDetails {
     public String getUsername() {
         return email;
     }
-@Override
-public String getPassword(){
+    @Override
+    public String getPassword(){
         return password;
-}
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -69,8 +76,40 @@ public String getPassword(){
         return true;
     }
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private static Set<Order> orders = new HashSet<>();
+    private  Set<Orders> orders = new HashSet<>();
 
 
+
+    public void add(Orders order) {
+
+        if (order != null) {
+
+            if (orders == null) {
+                orders = new HashSet<>();
+            }
+
+            orders.add(order);
+            order.setUser(this);
+        }
+    }
+    @ManyToMany(mappedBy = "whoWhishesThisProduct")
+    public Set<Product> productsWished;
+
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "cin=" + cin +
+//                ", username='" + username + '\'' +
+//                ", completname='" + completname + '\'' +
+//                ", email='" + email + '\'' +
+//                ", password='" + password + '\'' +
+//                ", phone=" + phone +
+//                ", address='" + address + '\'' +
+//                ", companyname='" + companyname + '\'' +
+//                ", role=" + role +
+//                ", enabled=" + enabled +
+//                ", orders=" + orders +
+//                ", productsWished=" + productsWished +
+//                '}';
+//    }
 }
-

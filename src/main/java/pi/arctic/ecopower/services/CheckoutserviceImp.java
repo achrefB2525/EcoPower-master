@@ -8,13 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pi.arctic.ecopower.DTO.Achat;
+import pi.arctic.ecopower.DTO.Purchase;
 import pi.arctic.ecopower.entities.*;
 import pi.arctic.ecopower.DTO.Payment;
 import pi.arctic.ecopower.DTO.Reponseachat;
 import pi.arctic.ecopower.repositories.UserRepo;
+
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -22,13 +23,13 @@ import java.util.*;
 @Service
 @Slf4j
 public class CheckoutserviceImp implements  ICheckoutservice {
-     private  UserRepo userRepo;
-
+    @Autowired
+    UserRepo userRepo;
     @Autowired
     IProductService productService;
     @Autowired
     IUserservice iUserservice ;
-    public CheckoutserviceImp(UserRepo userRepo ,IProductService productService, @Value("${stripe.key.secret}") String secretKey) {
+    public CheckoutserviceImp(UserRepo userRepo , IProductService productService, @Value("${stripe.key.secret}") String secretKey) {
        this.userRepo =userRepo;
         this.productService = productService;
         Stripe.apiKey = secretKey;
@@ -43,62 +44,30 @@ public class CheckoutserviceImp implements  ICheckoutservice {
         params.put("amount", payment.getAmount());
         params.put("currency", payment.getCurrency());
         params.put("payment_method_types", paymentMethodTypes);
-        params.put("description", "achat");
-        params.put("receipt_email", payment.getEmailrecu());
 
         return PaymentIntent.create(params);
     };
-
-    @Override
-    public Reponseachat placeOrder(@NotNull HttpServletRequest Request ,Achat achat) {
-        // recuperation des info de la commande
-        // Create an instance of Order
-        Order order = new Order(
-                1L,                        // id
-                5,                         // totalQuantity
-                100.0,                     // totalPrice
-                "ABC123",                  // orderTrackingNumber
-                null,                      // addressLivraison (null or provide an Address instance)
-                LocalDate.now(),           // createdDate
-                new HashSet<>(),           // orderItems (empty set for now)
-                new HashSet<>(),           // products
-                null                       // user
-        );
-
-// Creating an OrderItem instance
-        OrderItem orderItem = new OrderItem();
-// Add the OrderItem to the order
-        order.add(orderItem);
-         //Order order = achat.getOrder();
+@Transactional
+@Override
+    public Reponseachat placeOrder(@NotNull HttpServletRequest Request , Purchase purchase) {
+         Orders orders = purchase.getOrder();
         // generer un num de suivie de la commande
         String orderTrackingNumber = generateOrderTrackingNumber();
-        order.setOrderTrackingNumber(orderTrackingNumber);
-      //liaison de commande au user
+        orders.setOrderTrackingNumber(orderTrackingNumber);
+        //populate order with orderItems
+        Set<OrderItem> orderItems = purchase.getOrderItems();
+        orderItems.forEach(item -> orders.add(item));
+    //liaison entre order et l'addess de liv
+  //  orders.setBillingAddress(purchase.getBillingAddress());
+//    orders.setShippingAddress(purchase.getShippingAddress());
+
+
+    //liaison de commande au user
          User user = iUserservice.getUserByToken(Request);
-         order.setUser(user);
-         //liaison entre order et l'addess de liv
-        order.setAddressLivraison(achat.getAddressLivraison());
-        // populate order with orderItems
-/*        Set<OrderItem> orderItems = achat.getOrder().getOrderItems();
-        orderItems.forEach(item -> {
-            Product newProduct = new Product();
-            try {
-                newProduct = productService.findProdById(item.getProductId());
-                newProduct.setQuantity(newProduct.getQuantity() - item.getQuantity());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            order.add(item);
-
-        });*/
-        // Ajout de l'historique d'achat
-        //Historique historique = new Historique();
-       // historique.setOrderId(order.getId());
-      //  historique.setUserId(user.getId());
-     //   IHistoriqueAchatService historiqueService = new IHistoriqueAchatServiceImp(); // Créer une instance de IHistoriqueAchatServiceImp
-      //  historiqueService.add(historique);
-
+         orders.setUser(user);
+         //save to database
+        userRepo.save(user);
+      //  Order savedOrder = orderRepo.save(order);
 
 
         return new Reponseachat(orderTrackingNumber);

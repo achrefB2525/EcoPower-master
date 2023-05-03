@@ -1,12 +1,14 @@
 package pi.arctic.ecopower.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,20 +16,14 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderItem {
+public class HelpCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    long count;
-
-    @ManyToOne
     @JsonIgnore
-    @JoinColumn(name="order_id")
-   private Orders orderMain;
-    @ManyToOne
-    private Product product;
 
-
+    Long id;
+    String name;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "helpCategory")
+    @JsonIgnoreProperties("helpCategory")
+    Set<Help> helps;
 }
-
-
