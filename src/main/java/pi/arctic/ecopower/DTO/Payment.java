@@ -1,4 +1,4 @@
-package pi.arctic.ecopower.DTO;
+package pi.arctic.ecopower.dto;
 
 import lombok.Data;
 import org.apache.catalina.User;

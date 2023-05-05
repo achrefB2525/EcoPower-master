@@ -1,16 +1,18 @@
 package pi.arctic.ecopower.services;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import pi.arctic.ecopower.auth.RegisterRequest;
-import pi.arctic.ecopower.auth.AuthenticationRequest;
-import pi.arctic.ecopower.auth.AuthenticationResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pi.arctic.ecopower.Security.IJwtService;
+import pi.arctic.ecopower.auth.AuthenticationRequest;
+import pi.arctic.ecopower.auth.AuthenticationResponse;
+import pi.arctic.ecopower.auth.RegisterRequest;
 import pi.arctic.ecopower.entities.User;
 import pi.arctic.ecopower.repositories.UserRepo;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {

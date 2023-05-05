@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+
 @Entity
 @Table(name="address")
 @Getter
@@ -27,5 +28,5 @@ public class Address {
 
     @OneToOne
     @PrimaryKeyJoinColumn
-    private Order order;
+    private Orders order;
 }

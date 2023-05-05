@@ -1,11 +1,8 @@
 package pi.arctic.ecopower.dto;
 
-
 import lombok.Data;
+
 @Data
-
-public class Reponseachat {
-    //numero de suivi pour l'etat de la commande
-
+public class PurchaseResponse {
     private final String orderTrackingNumber;
 }

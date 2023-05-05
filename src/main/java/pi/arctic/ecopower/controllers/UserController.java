@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-   private final IUserservice iUserservice;
+    private final IUserservice iUserservice;
     @PostMapping("/add-user")
     @Transactional
 
@@ -30,7 +30,7 @@ public class UserController {
     }
 
 
-@PutMapping("/update")
+    @PutMapping("/update")
     @Transactional
 
     public ResponseEntity<String> updateUser(User u) {

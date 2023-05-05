@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import pi.arctic.ecopower.entities.Historique;
 
 import java.util.Optional;
+
 @Repository
 public interface HistoriqueRepo extends JpaRepository<Historique,Integer> {
     Optional<Historique> findById(int id );

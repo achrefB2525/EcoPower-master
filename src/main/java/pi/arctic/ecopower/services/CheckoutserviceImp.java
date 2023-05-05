@@ -1,37 +1,68 @@
 package pi.arctic.ecopower.services;
 
-import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
-import com.sun.istack.NotNull;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Value;
 import org.springframework.stereotype.Service;
-import pi.arctic.ecopower.DTO.Achat;
-import pi.arctic.ecopower.entities.*;
-import pi.arctic.ecopower.DTO.Payment;
-import pi.arctic.ecopower.DTO.Reponseachat;
+import pi.arctic.ecopower.dto.Payment;
+import pi.arctic.ecopower.dto.Purchase;
+import pi.arctic.ecopower.dto.PurchaseResponse;
+import pi.arctic.ecopower.entities.OrderItem;
+import pi.arctic.ecopower.entities.Orders;
+import pi.arctic.ecopower.entities.Product;
+import pi.arctic.ecopower.entities.User;
 import pi.arctic.ecopower.repositories.UserRepo;
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
-@Slf4j
-public class CheckoutserviceImp implements  ICheckoutservice {
-     private  UserRepo userRepo;
+public class CheckoutServiceImp implements ICheckoutService {
+    private ProductServiceImp productService;
+    private UserRepo customerRepository;
 
-    @Autowired
-    IProductService productService;
-    @Autowired
-    IUserservice iUserservice ;
-    public CheckoutserviceImp(UserRepo userRepo ,IProductService productService, @Value("${stripe.key.secret}") String secretKey) {
-       this.userRepo =userRepo;
+    public CheckoutServiceImp(UserRepo customerRepository, ProductServiceImp productService) {
+        this.customerRepository = customerRepository;
         this.productService = productService;
-        Stripe.apiKey = secretKey;
+    }
+
+    @Override
+    @Transactional
+    public PurchaseResponse placeOrder(Purchase purchase) {
+
+        // retrieve the order info from dto
+        Orders order = purchase.getOrder();
+
+        // generate tracking number
+        String orderTrackingNumber = generateOrderTrackingNumber();
+        order.setOrderTrackingNumber(orderTrackingNumber);
+
+        // populate order with orderItems
+        Set<OrderItem> orderItems = purchase.getOrderItems();
+        orderItems.forEach(item -> {
+            Product newProduct = new Product();
+            try {
+                newProduct = productService.findProdById(item.getProduct().getId());
+                newProduct.setQuantity(newProduct.getQuantity() - item.getProduct().getQuantity());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            order.add(item);
+
+        });
+//        // populate order with billingAddress and shippingAddress
+//        order.setBillingAddress(purchase.getBillingAddress());
+//        order.setShippingAddress(purchase.getShippingAddress());
+
+        // populate customer with order
+        User customer = purchase.getCustomer();
+        customer.add(order);
+
+        // save to the database
+        customerRepository.save(customer);
+
+        // return a response
+        return new PurchaseResponse(orderTrackingNumber);
     }
 
     @Override
@@ -49,67 +80,19 @@ public class CheckoutserviceImp implements  ICheckoutservice {
         return PaymentIntent.create(params);
     };
 
-    @Override
-    public Reponseachat placeOrder(@NotNull HttpServletRequest Request ,Achat achat) {
-        // recuperation des info de la commande
-        // Create an instance of Order
-        Order order = new Order(
-                1L,                        // id
-                5,                         // totalQuantity
-                100.0,                     // totalPrice
-                "ABC123",                  // orderTrackingNumber
-                null,                      // addressLivraison (null or provide an Address instance)
-                LocalDate.now(),           // createdDate
-                new HashSet<>(),           // orderItems (empty set for now)
-                new HashSet<>(),           // products
-                null                       // user
-        );
-
-// Creating an OrderItem instance
-        OrderItem orderItem = new OrderItem();
-// Add the OrderItem to the order
-        order.add(orderItem);
-         //Order order = achat.getOrder();
-        // generer un num de suivie de la commande
-        String orderTrackingNumber = generateOrderTrackingNumber();
-        order.setOrderTrackingNumber(orderTrackingNumber);
-      //liaison de commande au user
-         User user = iUserservice.getUserByToken(Request);
-         order.setUser(user);
-         //liaison entre order et l'addess de liv
-        order.setAddressLivraison(achat.getAddressLivraison());
-        // populate order with orderItems
-/*        Set<OrderItem> orderItems = achat.getOrder().getOrderItems();
-        orderItems.forEach(item -> {
-            Product newProduct = new Product();
-            try {
-                newProduct = productService.findProdById(item.getProductId());
-                newProduct.setQuantity(newProduct.getQuantity() - item.getQuantity());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            order.add(item);
-
-        });*/
-        // Ajout de l'historique d'achat
-        //Historique historique = new Historique();
-       // historique.setOrderId(order.getId());
-      //  historique.setUserId(user.getId());
-     //   IHistoriqueAchatService historiqueService = new IHistoriqueAchatServiceImp(); // Créer une instance de IHistoriqueAchatServiceImp
-      //  historiqueService.add(historique);
-
-
-
-        return new Reponseachat(orderTrackingNumber);
-    }
-    private static int orderCount = 0;
 
     private String generateOrderTrackingNumber() {
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String orderNumber = String.format("%06d", orderCount);
-        orderCount++;
-        return timestamp + orderNumber;
-    }
-}
 
+        // generate a random UUID number (UUID version-4)
+        return UUID.randomUUID().toString();
+
+
+        // For details see: https://en.wikipedia.org/wiki/Universally_unique_identifier
+        //
+
+    }
+
+
+
+
+}

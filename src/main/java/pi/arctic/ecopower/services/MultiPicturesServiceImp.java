@@ -41,7 +41,9 @@ public class MultiPicturesServiceImp implements IMultiPicturesService{
     }
 
     @Override
-    public Set<MultiPictures> getPicturesForProduct(Product product) {
-        return multiPicturesRepo.findMultiPicturesByProductimage(product);
+    public Set<MultiPictures> getPicturesForProduct(long id) {
+        return multiPicturesRepo.findMultiPicturesByProductimage(id);
     }
+
+
 }

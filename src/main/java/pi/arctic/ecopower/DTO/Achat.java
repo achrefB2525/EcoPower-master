@@ -1,10 +1,11 @@
-package pi.arctic.ecopower.DTO;
+package pi.arctic.ecopower.dto;
 
 import pi.arctic.ecopower.entities.Address;
-import pi.arctic.ecopower.entities.Order;
+
 import com.stripe.model.OrderItem;
 import lombok.Data;
 import org.apache.catalina.User;
+import pi.arctic.ecopower.entities.Orders;
 
 
 import java.util.Set;
@@ -13,5 +14,5 @@ public class Achat {
     User user;
     private Address addressLivraison;
     private Set<OrderItem> getOrderItems;
-    private Order order ;
+    private Orders order ;
 }

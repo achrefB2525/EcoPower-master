@@ -1,9 +1,12 @@
 package pi.arctic.ecopower.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -15,10 +18,17 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    double price;
-    int quantity;
-    private Long productId;
+    long count;
 
     @ManyToOne
-    Order order;
+    @JsonIgnore
+    @JoinColumn(name="order_id")
+    Orders orderMain;
+    @ManyToOne
+
+    private Product product;
+
+
 }
+
+

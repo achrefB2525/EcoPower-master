@@ -32,14 +32,15 @@ public class SecrityConfig   {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
+                .antMatchers("/**").permitAll()
                 .antMatchers("/auth/register").permitAll()
                 .antMatchers("/logout").permitAll()
-                .antMatchers("**").permitAll()
                 .antMatchers("/login/oauth2/google").permitAll()
                 .antMatchers("/user/add-user").hasAuthority(Role.Admin.name())
                 .antMatchers("/user/getUsers").hasAuthority(Role.Admin.name())
                 .antMatchers("/user/get-user/{id}").hasAuthority(Role.Admin.name())
                 .antMatchers("/user/remove-user/{id}").hasAuthority(Role.Admin.name())
+
                 .antMatchers("/user/updateUser").hasAuthority(Role.Admin.name())
                 .antMatchers("/user/UpdatePassword/{oldPassword}/{newPassword}").
                 hasAnyAuthority(Role.Admin.name()

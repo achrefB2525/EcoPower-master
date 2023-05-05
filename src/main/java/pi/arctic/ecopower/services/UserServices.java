@@ -5,11 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
 import pi.arctic.ecopower.Security.IJwtService;
 import pi.arctic.ecopower.auth.RegisterRequest;
-import pi.arctic.ecopower.config.EmailExist;
 import pi.arctic.ecopower.entities.User;
 import pi.arctic.ecopower.repositories.UserRepo;
 
@@ -49,7 +46,7 @@ public class UserServices implements IUserservice {
                 .address(request.getAddress())
                 .companyname(request.getCompanyname())
                 .build();
-      //  if(userRepo.findByEmail(user.getEmail()).isPresent()){
+        //  if(userRepo.findByEmail(user.getEmail()).isPresent()){
         //    throw new EmailExist("email exist");}
         return         userRepo.save(user);
 
@@ -73,7 +70,7 @@ public class UserServices implements IUserservice {
     public User getUserById(int id) {
         return userRepo.findById(id).get();
     }
-@Override
+    @Override
     public User getUserByToken(@NonNull HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
@@ -83,5 +80,5 @@ public class UserServices implements IUserservice {
 
         return userRepo.findByEmail(userEmail).get();
     }
-    
+
 }
