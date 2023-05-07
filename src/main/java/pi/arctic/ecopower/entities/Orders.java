@@ -21,6 +21,7 @@ import java.util.Set;
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="order_id")
     Long OrderId;
     long totalPrice;
     @ColumnDefault("0")
@@ -29,8 +30,14 @@ public class Orders {
     LocalDateTime createdDate;
     @UpdateTimestamp
     LocalTime updateTime;
-    @Column(name="order-tracking-number")
+    @Column(name="orderTrackingnumber")
     String OrderTrackingNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
+    private Address shippingAddress;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "billing_address_id", referencedColumnName = "id")
+    private Address billingAddress;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "orderMain")
    private Set<OrderItem> orderItems = new HashSet<>();

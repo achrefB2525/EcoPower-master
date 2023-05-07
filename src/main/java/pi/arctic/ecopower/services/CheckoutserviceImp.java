@@ -50,24 +50,40 @@ public class CheckoutserviceImp implements  ICheckoutservice {
 @Transactional
 @Override
     public Reponseachat placeOrder(@NotNull HttpServletRequest Request , Purchase purchase) {
-         Orders orders = purchase.getOrder();
-        // generer un num de suivie de la commande
-        String orderTrackingNumber = generateOrderTrackingNumber();
-        orders.setOrderTrackingNumber(orderTrackingNumber);
-        //populate order with orderItems
-        Set<OrderItem> orderItems = purchase.getOrderItems();
-        orderItems.forEach(item -> orders.add(item));
-    //liaison entre order et l'addess de liv
-  //  orders.setBillingAddress(purchase.getBillingAddress());
-//    orders.setShippingAddress(purchase.getShippingAddress());
+    // retrieve the order info from dto
+    Orders orders = purchase.getOrder();
 
+    // generate tracking number
+    String orderTrackingNumber = generateOrderTrackingNumber();
+    orders.setOrderTrackingNumber(orderTrackingNumber);
 
-    //liaison de commande au user
-         User user = iUserservice.getUserByToken(Request);
-         orders.setUser(user);
-         //save to database
-        userRepo.save(user);
-      //  Order savedOrder = orderRepo.save(order);
+    // populate order with orderItems
+    Set<OrderItem> orderItems = purchase.getOrderItems();
+    orderItems.forEach(item -> orders.add(item));
+
+    // populate order with billingAddress and shippingAddress
+   orders.setBillingAddress(purchase.getBillingAddress());
+   orders.setShippingAddress(purchase.getShippingAddress());
+
+    // populate customer with order
+    User user = iUserservice.getUserByToken(Request);
+
+    // check if this is an existing customer
+    String theEmail = user.getEmail();
+
+    //User userFromDB = userRepo.findByEmail(theEmail);
+
+   /* if (customerFromDB != null) {
+        // we found them ... let's assign them accordingly
+        customer = customerFromDB;
+    }*/
+
+    user.add(orders);
+
+    // save to the database
+    userRepo.save(user);
+
+    // return a response
 
 
         return new Reponseachat(orderTrackingNumber);
