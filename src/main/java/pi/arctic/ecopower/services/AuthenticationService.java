@@ -51,6 +51,7 @@ public class AuthenticationService {
         String code =  iUserservice.genratOtp();
         claims.put("code", code);
         claims.put("roles", user.getRole().toString());
+        claims.put("id", user.getId());
         var JwtToken=ijwtService.generateToken(claims, user);;
         if (request.getRole().equals(Role.Provider)) {
             List<String> adminEmails = iUserservice.findAdminEmails();
@@ -65,8 +66,6 @@ public class AuthenticationService {
 
             }
         } else {
-
-
             JwtToken = ijwtService.generateToken(claims, user);
 
             iUserservice.sendEmail(user.getEmail(),"proposal for a contract",code);
@@ -79,7 +78,6 @@ public class AuthenticationService {
     }
 
 
-
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -89,6 +87,7 @@ public class AuthenticationService {
             if (user != null) {
                 Map<String, Object> claims = new HashMap<>();
                 claims.put("roles", user.getRole().toString());
+                claims.put("id", user.getId());
                 var jwtToken = ijwtService.generateToken(claims, user);
 
                 return AuthenticationResponse.builder()
