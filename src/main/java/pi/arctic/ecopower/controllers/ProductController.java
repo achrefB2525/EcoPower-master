@@ -14,8 +14,10 @@ import org.apache.commons.io.FileUtils;
 import pi.arctic.ecopower.entities.MultiPictures;
 import pi.arctic.ecopower.entities.Product;
 import pi.arctic.ecopower.entities.ProductCategory;
+import pi.arctic.ecopower.entities.User;
 import pi.arctic.ecopower.repositories.MultiPicturesRepo;
 import pi.arctic.ecopower.repositories.ProductRepo;
+import pi.arctic.ecopower.repositories.UserRepo;
 import pi.arctic.ecopower.services.ProductCategoryServiceImp;
 import pi.arctic.ecopower.services.ProductServiceImp;
 
@@ -43,11 +45,14 @@ public class ProductController implements ServletContextAware {
     private ProductRepo productRepository;
     @Autowired
     MultiPicturesRepo imageRepository;
+    private final UserRepo userRepo;
 
-    public ProductController(ProductServiceImp productService, ProductRepo productRepository, ProductCategoryServiceImp productCategoryService) {
+    public ProductController(ProductServiceImp productService, ProductRepo productRepository, ProductCategoryServiceImp productCategoryService,
+                             UserRepo userRepo) {
         this.productService = productService;
         this.productCategoryService = productCategoryService;
         this.productRepository = productRepository;
+        this.userRepo = userRepo;
     }
 
 
@@ -73,12 +78,15 @@ public class ProductController implements ServletContextAware {
         this.context = servletContext;
     } //obtenir le chemin réel du système de fichiers du serveur où les images seront enregistrées
 
-    @PostMapping("/addproduct")
+    @PostMapping("/addproduct/{iduser}")
     public long newProduct(@RequestParam("files") MultipartFile[] files,
                            @RequestParam("product") String product,
+                           @PathVariable int iduser,
                            @RequestParam("file") MultipartFile image) throws JsonParseException, JsonMappingException, Exception {
 
+        User user = userRepo.findById(iduser).orElse(null);
         Product arti = new ObjectMapper().readValue(product, Product.class); //convertir la chaîne "product" en un objet "Product
+        arti.getWhoWhishesThisProduct().add(user);
         boolean isExit = new File(context.getRealPath("/Imagess/")).exists(); //vérifie si le dossier image existe
         if (!isExit) {
             new File(context.getRealPath("/Imagess/")).mkdir();

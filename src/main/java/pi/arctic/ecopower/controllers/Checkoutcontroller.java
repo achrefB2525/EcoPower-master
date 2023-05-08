@@ -11,15 +11,13 @@ import pi.arctic.ecopower.DTO.Purchase;
 import pi.arctic.ecopower.DTO.Payment;
 import pi.arctic.ecopower.DTO.Reponseachat;
 import pi.arctic.ecopower.services.CheckoutserviceImp;
-import pi.arctic.ecopower.services.EmailService;
 
 import javax.servlet.http.HttpServletRequest;
 @CrossOrigin(origins = "*")// spring et angular
 @RestController
 @RequestMapping("/checkout")
 public class Checkoutcontroller {
-    @Autowired
-     EmailService emailService;
+
     @Autowired
     CheckoutserviceImp checkoutservice ;
     @PostMapping("/achat")

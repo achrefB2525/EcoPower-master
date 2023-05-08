@@ -1,21 +1,18 @@
 package pi.arctic.ecopower.entities;
 
-
 import lombok.*;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pi.arctic.ecopower.repositories.OrdersRepo;
 
 import javax.persistence.*;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import static javax.persistence.EnumType.STRING;
-
-
 
 @Data
 @Builder
@@ -25,25 +22,26 @@ import static javax.persistence.EnumType.STRING;
 @NoArgsConstructor
 @Entity
 
-
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int id ;
+   private  int id ;
     private int cin;
 
     private String username;
 
     private String completname;
+    @Column(name = "email")
+
     private String email;
     private String password;
     private int phone;
     private String address;
     private String companyname;
     @Enumerated(STRING)
-    private Role role;
 
-    public boolean enabled =true;
+    private Role role;
+    public boolean enabled ;
 
 
 
@@ -56,10 +54,10 @@ public class User implements UserDetails {
     public String getUsername() {
         return email;
     }
-    @Override
-    public String getPassword(){
+@Override
+public String getPassword(){
         return password;
-    }
+}
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -75,10 +73,10 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+    //@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+   // private static Set<Order> orders = new HashSet<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private  Set<Orders> orders = new HashSet<>();
-
-
+    private Set<Orders> orders = new HashSet<>();
 
     public void add(Orders order) {
 
@@ -92,24 +90,6 @@ public class User implements UserDetails {
             order.setUser(this);
         }
     }
-    @ManyToMany(mappedBy = "whoWhishesThisProduct")
-    public Set<Product> productsWished;
 
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "cin=" + cin +
-//                ", username='" + username + '\'' +
-//                ", completname='" + completname + '\'' +
-//                ", email='" + email + '\'' +
-//                ", password='" + password + '\'' +
-//                ", phone=" + phone +
-//                ", address='" + address + '\'' +
-//                ", companyname='" + companyname + '\'' +
-//                ", role=" + role +
-//                ", enabled=" + enabled +
-//                ", orders=" + orders +
-//                ", productsWished=" + productsWished +
-//                '}';
-//    }
 }
+

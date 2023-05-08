@@ -11,6 +11,7 @@ import pi.arctic.ecopower.entities.User;
 import pi.arctic.ecopower.services.IUserservice;
 
 import javax.persistence.PostUpdate;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -57,5 +58,10 @@ public class UserController {
     public ResponseEntity<User>  getUserById(@PathVariable("id") Integer  id) {
         User u = iUserservice.getUserById(id);
         return new ResponseEntity<User>(u, HttpStatus.OK);
+    }
+    @GetMapping("/user/bytoken")
+    public ResponseEntity<User> getCurrentUser(HttpServletRequest request) {
+        User user = iUserservice.getUserByToken(request);
+        return ResponseEntity.ok(user);
     }
 }

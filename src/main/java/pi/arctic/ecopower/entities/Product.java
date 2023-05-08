@@ -70,7 +70,7 @@ public class Product {
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "WISHLIST", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "client_id"))
-    private Set<User> whoWhishesThisProduct;
+    private Set<User> whoWhishesThisProduct=new HashSet<User>();
 
     @Override
     public String toString() {

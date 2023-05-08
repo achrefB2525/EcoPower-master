@@ -64,7 +64,7 @@ public class CheckoutserviceImp implements  ICheckoutservice {
     // populate order with billingAddress and shippingAddress
    orders.setBillingAddress(purchase.getBillingAddress());
    orders.setShippingAddress(purchase.getShippingAddress());
-
+   orders.setOrderStatus(1);
     // populate customer with order
     User user = iUserservice.getUserByToken(Request);
 
@@ -73,9 +73,9 @@ public class CheckoutserviceImp implements  ICheckoutservice {
 
     //User userFromDB = userRepo.findByEmail(theEmail);
 
-   /* if (customerFromDB != null) {
+   /* if ( userFromDB != null) {
         // we found them ... let's assign them accordingly
-        customer = customerFromDB;
+        user = userFromDB;
     }*/
 
     user.add(orders);
