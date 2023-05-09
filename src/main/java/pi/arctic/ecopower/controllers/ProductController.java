@@ -233,7 +233,7 @@ public class ProductController implements ServletContextAware {
         productService.calculeEtoile(rev, produitId, clientId);
     }
 
-    @GetMapping("prix/{minP}/{maxP}")
+    @GetMapping("/prix/{minP}/{maxP}")
     public List<Product> findByPrice(@PathVariable long minP, @PathVariable long maxP){
         return productService.findByPrice(minP,maxP);
     }

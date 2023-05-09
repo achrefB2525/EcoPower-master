@@ -91,7 +91,10 @@ public class OrdersServiceImp implements IOrdersService {
         orderRepo.save(order);
     }
 
-
+    @Override
+    public Orders getUserOrder(int idU) {
+        return orderRepo.findByUserId(idU);
+    }
 
 
 }

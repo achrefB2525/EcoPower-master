@@ -18,6 +18,7 @@ public interface IOrdersService {
     Set<Orders> getOrdersByDate(LocalDate date);
     long TotalPrice(Long idI);
     void validateOrder(long orderId);
+    Orders getUserOrder(int idU);
 
 
 }

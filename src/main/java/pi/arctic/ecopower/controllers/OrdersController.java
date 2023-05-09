@@ -57,4 +57,9 @@ public class OrdersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while validating the order.");
         }
     }
+
+    @GetMapping("/user/{idU}")
+    public Orders getUserOrder(@PathVariable int idU) {
+        return iOrderService.getUserOrder(idU);
+    }
 }

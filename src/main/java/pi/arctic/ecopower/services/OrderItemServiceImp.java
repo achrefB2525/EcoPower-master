@@ -7,6 +7,7 @@ import pi.arctic.ecopower.entities.OrderItem;
 import pi.arctic.ecopower.entities.Orders;
 import pi.arctic.ecopower.entities.Product;
 import pi.arctic.ecopower.entities.User;
+import pi.arctic.ecopower.enums.CartItemDoesNotExistsException;
 import pi.arctic.ecopower.repositories.OrderItemRepo;
 import pi.arctic.ecopower.repositories.OrdersRepo;
 import pi.arctic.ecopower.repositories.ProductRepo;
@@ -27,6 +28,7 @@ public class OrderItemServiceImp implements IOrderItemService {
     private OrdersRepo ordersRepo;
     @Autowired
     private UserServices userService;
+    private final OrderItemRepo orderItemRepo;
 
     @Override
     public void add(OrderItem item) {
@@ -35,9 +37,9 @@ public class OrderItemServiceImp implements IOrderItemService {
 
     @Override
     public OrderItem update(OrderItem item) {
-
-        return orderItem.save(item);
+        return null;
     }
+
 
     @Override
     public List<OrderItem> getAll() {
@@ -60,17 +62,20 @@ public class OrderItemServiceImp implements IOrderItemService {
     public void assignProductToCart(long idP, int idU) {
         Product product = prouductserviceImp.findProdById(idP);
         User user = userService.getUserById(idU);
-        System.out.println(idP);
+        System.out.println("this is a product id:" + idP);
         boolean reponse = false;
         boolean found = false;
 
         for (Orders orders : user.getOrders()) {
-            System.out.println(orders);
+            System.out.println("this is the user orders: "+ orders);
             if (orders.getOrderStatus() == 0) {
                 found = true;
                 for (OrderItem item : orders.getOrderItems()) {
                     if (item.getProduct().getId().equals(idP)) {
+                        System.out.println("********  il a trouvé un produit sémilaire dans l'item : "+ item.getCount());
                         item.setCount(item.getCount() + 1); //incrémenter nb OrderItem
+                        System.out.println("******** New Count :" + item.getCount());
+                        orderItem.save(item);
                         reponse = true;
                     }
                 }
@@ -91,8 +96,13 @@ public class OrderItemServiceImp implements IOrderItemService {
             Orders order = new Orders();
             order.setUser(user);
             order.setOrderStatus(0);
+<<<<<<< Updated upstream
            // order.setOrderId(2L);
             System.out.println(order);
+=======
+            // order.setOrderId(2L);
+            System.out.println("this is the new order created :"+ order);
+>>>>>>> Stashed changes
             OrderItem o = new OrderItem();
             o.setProduct(product);
             o.setCount(1);
@@ -110,5 +120,17 @@ public class OrderItemServiceImp implements IOrderItemService {
         }
     }
 
+    public OrderItem updateOrderItem(OrderItem orderItem) {
+        for (OrderItem item : getAll()) {
+            if (item.equals(orderItem)) {
+                item.setCount(orderItem.getCount());
+                return orderItemRepo.save(item);
+            }
+        }
 
+        throw new CartItemDoesNotExistsException(
+                "Cart item w/ user id " + " and product id " +
+                        orderItem.getProduct().getId() + " does not exist."
+        );
+    }
 }

@@ -14,6 +14,11 @@ import java.util.Set;
 public interface OrdersRepo extends JpaRepository<Orders,Long> {
 
     Set<Orders> findByCreatedDate(LocalDate date);
+<<<<<<< Updated upstream
+=======
+    Orders findByUserId(int idU);
+
+>>>>>>> Stashed changes
     //Page<Orders> findAllByOrderStatusOrderByCreatedDateDesc(Integer orderStatus, Pageable pageable);
     //Page<Orders> findAllByBuyerEmailOrderByOrderStatusAscCreatedDateDesc(String buyerEmail, Pageable pageable);
 }
