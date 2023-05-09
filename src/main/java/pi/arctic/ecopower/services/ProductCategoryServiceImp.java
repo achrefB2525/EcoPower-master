@@ -10,33 +10,30 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ProductCategoryServiceImp implements IProductCategoryService{
-    private ProductCategoryRepo categoryProductRepo;
+    private ProductCategoryRepo productCategoryRepo;
     @Override
-    public List<ProductCategory> findAllCategory() {
-        return categoryProductRepo.findAll();
+    public void add(ProductCategory category) {
+
+        productCategoryRepo.save(category);
     }
 
     @Override
-    public ProductCategory findProdById(Long id) {
-        return categoryProductRepo.findById(id).orElse(null);
+    public ProductCategory update(ProductCategory category) {
+        return productCategoryRepo.save(category);
     }
 
     @Override
-    public ProductCategory addProduct(ProductCategory categoryProduct) {
-        return categoryProductRepo.save(categoryProduct);
+    public List<ProductCategory> getAll() {
+        return productCategoryRepo.findAll();
     }
 
     @Override
-    public ProductCategory editProduct(ProductCategory categoryProduct) {
-        return categoryProductRepo.save(categoryProduct);
+    public ProductCategory getById(long id) {
+        return productCategoryRepo.findById(id).orElse(null);
     }
 
     @Override
-    public void deleteProduct(Long id) {
-        categoryProductRepo.deleteById(id);
+    public void remove(long id) {
+        productCategoryRepo.deleteById(id);
     }
-
-
-
-
 }

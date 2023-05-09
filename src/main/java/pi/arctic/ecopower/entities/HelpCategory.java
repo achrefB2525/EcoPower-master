@@ -19,7 +19,7 @@ import java.util.Set;
 public class HelpCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
+    
 
     Long id;
     String name;
