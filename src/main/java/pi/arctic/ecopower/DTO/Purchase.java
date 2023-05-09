@@ -10,7 +10,7 @@ import pi.arctic.ecopower.entities.User;
 import java.util.Set;
 @Data
 public class Purchase {
-    private User customer;
+    private User user;
     private Address shippingAddress;
     private Address billingAddress;
     private Orders order;
