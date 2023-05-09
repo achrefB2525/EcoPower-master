@@ -12,5 +12,5 @@ public interface IMultiPicturesService {
     List<MultiPictures> getAll();
     MultiPictures getById(long id);
     void remove(long id);
-    Set<MultiPictures> getPicturesForProduct(long id);
+    Set<MultiPictures> getPicturesForProduct(Product product);
 }

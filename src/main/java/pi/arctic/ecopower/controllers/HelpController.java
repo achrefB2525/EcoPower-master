@@ -11,7 +11,7 @@ import pi.arctic.ecopower.services.IHelpCategoryService;
 import pi.arctic.ecopower.services.IHelpService;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("help")
 @AllArgsConstructor
@@ -32,6 +32,7 @@ public class HelpController {
         Help h = repoHelp.getById(id);
         h.setTitle(help.getTitle());
         h.setDescription(help.getDescription());
+        h.setEmail(help.getEmail());
         h.setPhotos(help.getPhotos());
         h.setStatus(help.getStatus());
         return iHelpService.update(h);
@@ -54,7 +55,7 @@ public class HelpController {
         List<Help> helps = repoHelp.findHelpByHelpCategory(helpCategory);
         return helps;
     }
-    @PostMapping("/searchHelps/{search_text}")
+    @GetMapping("/searchHelps/{search_text}")
     public List<Help> searchOffer (@PathVariable("search_text") String search_text) {
         return repoHelp.searchOfferByText(search_text);
     }
@@ -63,6 +64,7 @@ public class HelpController {
         Help h = repoHelp.getById(id);
         h.setTitle(help.getTitle());
         h.setDescription(help.getDescription());
+        h.setEmail(help.getEmail());
         h.setPhotos(help.getPhotos());
         h.setStatus(HelpStatus.valueOf("IN_PROGRESS"));
         return iHelpService.update(h);
@@ -72,6 +74,7 @@ public class HelpController {
         Help h = repoHelp.getById(id);
         h.setTitle(help.getTitle());
         h.setDescription(help.getDescription());
+        h.setEmail(help.getEmail());
         h.setPhotos(help.getPhotos());
         h.setStatus(HelpStatus.valueOf("DONE"));
         return iHelpService.update(h);
@@ -81,6 +84,7 @@ public class HelpController {
         Help h = repoHelp.getById(id);
         h.setTitle(help.getTitle());
         h.setDescription(help.getDescription());
+        h.setEmail(help.getEmail());
         h.setPhotos(help.getPhotos());
         h.setStatus(HelpStatus.valueOf("REJECTED"));
         return iHelpService.update(h);

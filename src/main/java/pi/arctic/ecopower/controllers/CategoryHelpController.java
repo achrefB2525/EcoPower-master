@@ -13,7 +13,7 @@ import pi.arctic.ecopower.services.IProductCategoryService;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("categoryHelp")
 @AllArgsConstructor

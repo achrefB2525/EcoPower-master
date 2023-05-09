@@ -79,4 +79,5 @@ public class HelpServiceImp implements IHelpService{
 
         return textTranslate.getResult();
     } */
+
 }

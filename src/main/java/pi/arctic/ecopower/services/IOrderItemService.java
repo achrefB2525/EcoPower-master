@@ -10,5 +10,4 @@ public interface IOrderItemService {
     List<OrderItem> getAll();
     OrderItem getById(long id);
     void remove(long id);
-    void assignProductToCart(long idP, int idU);
 }

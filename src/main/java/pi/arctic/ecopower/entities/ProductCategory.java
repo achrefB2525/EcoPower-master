@@ -1,6 +1,5 @@
 package pi.arctic.ecopower.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,7 +11,6 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class ProductCategory {
@@ -20,9 +18,8 @@ public class ProductCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
-    Set<Product> products;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productCategory")
+    Set<Product> productscat;
 
 
 }
